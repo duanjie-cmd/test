@@ -15,12 +15,13 @@
   <button id="btn4">发送消息</button>
   <script>
     const client_id = '650774602199-chuik81fdpcrsfivol9p8lk7bj9pr5f3.apps.googleusercontent.com'
+    const redirect_uri = window.location.origin + '/test/';
     btn.onclick = () => {
       const client = window?.google?.accounts?.oauth2?.initCodeClient({
         client_id,
         scope: 'profile email openid',
         ux_mode: 'popup',
-        redirect_uri: window.location.origin,
+        redirect_uri: redirect_uri,
         state: 'abc',
         callback: response => {
           console.log(response);
@@ -34,7 +35,7 @@
         client_id,
         scope: 'profile email openid',
         ux_mode: 'redirect',
-        redirect_uri: window.location.origin,
+        redirect_uri: redirect_uri,
         state: 'abc',
         callback: response => {
           console.log(response);
@@ -51,7 +52,7 @@
       paramsAdd(params, "gsiwebsdk", "3");
       paramsAdd(params, "client_id", client_id);
       paramsAdd(params, "scope", "profile email openid");
-      paramsAdd(params, "redirect_uri", window.location.origin);
+      paramsAdd(params, "redirect_uri", redirect_uri);
       paramsAdd(params, "prompt", "consent");
       paramsAdd(params, "state", 'self_popup230-49-32950-4353850948309685094680549403280948920584375984769854768ndksjfeiowewijrewnrijweirjeiwojriewjroewnineiojrciwejrijewcrjoeiwcroieworciuioejriowejcricwriejcouioewcurioew830490239c49c00-23ceewjrc');
       paramsAdd(params, "access_type", "offline");
