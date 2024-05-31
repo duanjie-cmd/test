@@ -1,28 +1,105 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>google OAuth2</title>
-    <script src="./gsi-client.js" async></script>
-  </head>
-  <body>
-    <button id="btn">google OAuth2</button>
-    <script>
-        btn.onclick = () => {
-          const client = window?.google?.accounts?.oauth2?.initCodeClient({
-            client_id: '142679704238-4e3i59bgro33gtd9m8d2s1cs7okhdjeb.apps.googleusercontent.com',
-            scope: "profile email openid",
-            ux_mode: "popup",
-            redirect_uri: window.location.origin,
-            state: 'abc',
-            callback: (response) => {
-                console.log(response);
-                alert(response?.code || "无code");
-            },
-        });
-        client?.requestCode();
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>google OAuth2</title>
+  <script src="./gsi-client.js" async></script>
+</head>
+
+<body>
+  <button id="btn">google OAuth2 popup</button>
+  <button id="btn2">google OAuth2 redirect</button>
+  <button id="btn3">slef popup</button>
+  <button id="btn4">发送消息</button>
+  <script>
+    const client_id = '650774602199-chuik81fdpcrsfivol9p8lk7bj9pr5f3.apps.googleusercontent.com'
+    btn.onclick = () => {
+      const client = window?.google?.accounts?.oauth2?.initCodeClient({
+        client_id,
+        scope: 'profile email openid',
+        ux_mode: 'popup',
+        redirect_uri: window.location.origin,
+        state: 'abc',
+        callback: response => {
+          console.log(response);
+          alert(response?.code || '无code');
+        },
+      });
+      client?.requestCode();
+    };
+    btn2.onclick = () => {
+      const client = window?.google?.accounts?.oauth2?.initCodeClient({
+        client_id,
+        scope: 'profile email openid',
+        ux_mode: 'redirect',
+        redirect_uri: window.location.origin,
+        state: 'abc',
+        callback: response => {
+          console.log(response);
+          alert(response?.code || '无code');
+        },
+      });
+      client?.requestCode();
+    };
+    btn3.onclick = () => {
+      const params = [];
+      const paramsAdd = (arr, key, value) => {
+        value && arr.push(key + "=" + encodeURIComponent(value.trim()));
+      };
+      paramsAdd(params, "gsiwebsdk", "3");
+      paramsAdd(params, "client_id", client_id);
+      paramsAdd(params, "scope", "profile email openid");
+      paramsAdd(params, "redirect_uri", window.location.origin);
+      paramsAdd(params, "prompt", "consent");
+      paramsAdd(params, "state", 'self_popup230-49-32950-4353850948309685094680549403280948920584375984769854768ndksjfeiowewijrewnrijweirjeiwojriewjroewnineiojrciwejrijewcrjoeiwcroieworciuioejriowejcricwriejcouioewcurioew830490239c49c00-23ceewjrc');
+      paramsAdd(params, "access_type", "offline");
+      paramsAdd(params, "response_type", "code");
+      paramsAdd(params, "include_granted_scopes", "true");
+      paramsAdd(params, "enable_granular_consent", "true");
+      const googleUrl =
+        "https://accounts.google.com/o/oauth2/v2/auth" + "?" + params.join("&");
+      // console.log(params, googleUrl,window.location.origin);
+      const authWindow = window.open(googleUrl, 'authWindow', 'width=500,height=600');
+      // 监听窗口消息
+      window.addEventListener('message', (event) => {
+          if (event.origin !== window.location.origin) {
+              return;
+          }
+          if(event?.data?.source === 'slef_test') {
+            console.log('Received message:', event);
+            console.log(event?.data?.data);
+            setTimeout(() => {
+              authWindow.close();
+            },1000)
+            alert(JSON.stringify(event?.data?.data));
+          }
+      });
+    }
+    btn4.onclick = () => {
+      console.log(window.opener);
+      if(window.opener) {
+        const params = new URLSearchParams(location.search);
+        window.opener?.postMessage({ source: 'slef_test',data: {
+          code: params.get('code'),
+          state: params.get('state')
+        } }, window.location.origin);
       }
-    </script>
-  </body>
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOMContentLoaded:',window.opener);
+      const params = new URLSearchParams(location.search);
+      const code = params.get('code');
+      const state = params.get('state');
+      if(window.opener && code && state) {
+        window.opener?.postMessage({ source: 'slef_test',data: {
+          code,
+          state
+        } }, window.location.origin);
+      }
+    });
+  </script>
+</body>
+
 </html>
