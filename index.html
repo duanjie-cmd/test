@@ -1,1 +1,29 @@
-网站内容开发中，敬请期待
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>google auth2</title>
+    <script src="./gsi-client.js" async></script>
+  </head>
+  <body>
+    <button id="btn">google auth2</button>
+    <script>
+        btn.onclick = () => {
+          const client = window?.google?.accounts?.oauth2?.initCodeClient({
+            client_id: '142679704238-4e3i59bgro33gtd9m8d2s1cs7okhdjeb.apps.googleusercontent.com',
+            scope: "profile email openid",
+            ux_mode: "popup",
+            redirect_uri: window.location.origin,
+            state: 'abc',
+            callback: (response) => {
+                console.log(response);
+                alert(response?.code || "无code");
+            },
+        });
+        debugger;
+        client?.requestCode();
+      }
+    </script>
+  </body>
+</html>
