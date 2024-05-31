@@ -94,6 +94,7 @@
     };
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOMContentLoaded:',window.opener);
+      alert(window.opener == null);
       const params = new URLSearchParams(location.search);
       const code = params.get('code');
       const state = params.get('state');
