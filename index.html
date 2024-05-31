@@ -17,6 +17,9 @@
   <div id="content1"></div>
   <h1>slef popup</h1>
   <div id="content2"></div>
+
+  <h1>DOMContentLoaded</h1>
+  <div id="content3"></div>
   <script>
     const client_id = '650774602199-chuik81fdpcrsfivol9p8lk7bj9pr5f3.apps.googleusercontent.com'
     const redirect_uri = window.location.origin + '/test/';
@@ -59,9 +62,10 @@
       paramsAdd(params, "response_type", "code");
       paramsAdd(params, "include_granted_scopes", "true");
       paramsAdd(params, "enable_granular_consent", "true");
-      const googleUrl =
+      let googleUrl =
         "https://accounts.google.com/o/oauth2/v2/auth" + "?" + params.join("&");
       // console.log(params, googleUrl,window.location.origin);
+      googleUrl = window.location.origin
       const authWindow = window.open(googleUrl, 'authWindow', 'width=500,height=600');
       // 监听窗口消息
       window.addEventListener('message', (event) => {
@@ -98,6 +102,7 @@
           code,
           state
         } }, window.location.origin);
+        content3.innerText = JSON.stringify({code,state});
       }
     });
   </script>
