@@ -65,7 +65,7 @@
       let googleUrl =
         "https://accounts.google.com/o/oauth2/v2/auth" + "?" + params.join("&");
       // console.log(params, googleUrl,window.location.origin);
-      googleUrl = window.location.origin
+      // googleUrl = window.location.origin + '?state="state"&code="2"';
       const authWindow = window.open(googleUrl, 'authWindow', 'width=500,height=600');
       // 监听窗口消息
       window.addEventListener('message', (event) => {
